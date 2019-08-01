@@ -35,7 +35,7 @@ writeVideo.m
 motionEstimation.m
 	|
 	|------>ARPS.m
-	|		|---->calculateMAD.m
+	|	|---->calculateMAD.m
 	|              
 	|------>reconstructImage.m
 	|
