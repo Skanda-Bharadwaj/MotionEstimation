@@ -65,16 +65,15 @@ function [motionVect, vectorShift] = ARPS(imgC, imgR, mbSize, p)
     % the diamond is the center of the search area at start.
     %
     % computations keeps track of the number of computations carried out.
-    %
+    
     checkMatrix = zeros(2*p+1,2*p+1);
-
     computations = 0;
     
     %% Raster scan
     %
     % Starting from top left corner of the image macro block is moved in
     % steps of mbsize. mbCoubt keeps track of number of evaluated blocks.
-    %
+    
     mbCount = 1;
     for i = 1 : mbSize : row-mbSize+1
         for j = 1 : mbSize : col-mbSize+1
