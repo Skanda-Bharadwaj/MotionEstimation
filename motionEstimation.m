@@ -36,6 +36,8 @@ F3 = struct('cdata', zeros(size(nFrames, 1)-1, 1), ...
         
         
 %% Iterate through frames of video
+frame_to_frame_displacement = cell(nFrames-2, 1);
+differenceImage = cell(nFrames-1, 1);
 for i = 0:nFrames-2
     
     %% Fetch currentframe
@@ -62,8 +64,10 @@ for i = 0:nFrames-2
                                    searchParameter);
       
     %% Reconstruct image using motion vectors
-    imgRC = reconstructImage(imgC, motionVect, macroBlockSize);
+    [displacementMap, imgRC] = reconstructImage(imgR, motionVect, macroBlockSize);
+    frame_to_frame_displacement{i+1, 1} = displacementMap;
     diffImage = imabsdiff(imgR,imgRC);
+    differenceImage{i+1, 1} = diffImage;
     imgD = imbinarize(diffImage);
     
     %% Create subplots for current, reference, reconstructed and difference
@@ -112,10 +116,15 @@ end
 
 %% Create Videos for captured frames
 framerate = 5;
-
-writeVideo(F1, framerate, 'caltrain.avi');
-writeVideo(F2, framerate, 'caltrain_vectorMotion.avi');
-writeVideo(F3, framerate, 'caltrain_vectorMotionOnImage.avi');
+RMSE = zeros(size(differenceImage));
+for i = 1:size(differenceImage, 1)
+    img = differenceImage{i, 1};
+    [rows, cols] = size(img);
+    RMSE(i, 1) = sqrt(sum(sum(img.^2))/(rows*cols));
+end
+% writeVideo(F1, framerate, 'caltrain.avi');
+% writeVideo(F2, framerate, 'caltrain_vectorMotion.avi');
+% writeVideo(F3, framerate, 'caltrain_vectorMotionOnImage.avi');
 
 %--------------------------------------------------------------------------
 %% END
