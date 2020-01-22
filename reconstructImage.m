@@ -14,18 +14,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
-function reconstructedImage = reconstructImage(imgR, motionVect, mbSize)
+function [displacementMap, reconstructedImage] = reconstructImage(imgR, motionVect, mbSize)
 
 [row, col] = size(imgR);
 
-mbCount = 1;
+mbCount = 1; cnt1 = 0; 
+displacementMap = cell(row/mbSize, col/mbSize);
 for i = 1:mbSize:row-mbSize+1
+    cnt2 = 0; cnt1 = cnt1 + 1;
     for j = 1:mbSize:col-mbSize+1
-        
+        cnt2 = cnt2 + 1;
         % assign vector components
         dy = motionVect(1,mbCount);
         dx = motionVect(2,mbCount);
         
+        displacementMap{cnt1, cnt2} = [dy, dx];
         % Find the shift for the reference block
         pixelRowInReferenceBlock = i + dy;
         pixelColumnInReferenceBlock = j + dx;
